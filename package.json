@@ -1,0 +1,24 @@
+{
+  "name": "servidor_proj_adsd",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pablovfds/servidor_proj_adsd.git"
+  },
+  "author": "Pablo Santos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pablovfds/servidor_proj_adsd/issues"
+  },
+  "homepage": "https://github.com/pablovfds/servidor_proj_adsd#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mongoose": "^4.7.0"
+  }
+}
