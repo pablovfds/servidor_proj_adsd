@@ -4,7 +4,8 @@ var app = express();
 
 var bodyParser = require('body-parser');
 
-var db_string = 'mongodb://127.0.0.1/imagelist';
+var db_string = process.env.MONGOLAB_URI ||
+ 'mongodb://root:root@ds133358.mlab.com:33358/imagelist';
 
 var mongoose = require('mongoose').connect(db_string);
 
@@ -16,22 +17,21 @@ db.on('error', console.error.bind(console, 'Erro ao conectar ao BD'));
 
 db.once('open', function () {
     var imageSchema = mongoose.Schema({
-        title: String,
-        created_at: Date
+        title: String
     });
-    
+
     Photo = mongoose.model('Photo', imageSchema);
 });
 
-app.listen(5000, function(){
-	console.log("App on");
-});
+app.set('port', (process.env.PORT || 5000));
 
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({
 	limit: '50mb',
 	extended: true
 }));
+
+app.use(express.static(__dirname + '/public'));
 
 app.get('/', function (require, response) {
     response.send('Sevidor ON!');
@@ -48,11 +48,11 @@ app.get('/imagelist', function (req, res) {
 });
 
 app.post('/imagelist', function(req, res){
-    
+
     var title = req.param('title');
-    
+
     console.log(title);
-    
+
     new Photo({
         'title': title,
         'created_at': new Date()
@@ -63,4 +63,8 @@ app.post('/imagelist', function(req, res){
             res.json(item);
         }
     });
+});
+
+app.listen(app.get('port'), function(){
+  console.log("Node app is running on port", app.get('port'));
 });
