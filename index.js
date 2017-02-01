@@ -5,9 +5,8 @@ var app = express();
 var bodyParser = require('body-parser');
 
 
-//var db_string = process.env.MONGOLAB_URI ||
- //'mongodb://root:root@ds133358.mlab.com:33358/imagelist'; // Heroku
-var db_string = 'mongodb://127.0.0.1/imagelist'; // Local
+var db_string = process.env.MONGOLAB_URI || 'mongodb://root:root@ds133358.mlab.com:33358/imagelist'; // Heroku
+//var db_string = 'mongodb://127.0.0.1/imagelist'; // Local
 
 var mongoose = require('mongoose').connect(db_string);
 
