@@ -5,9 +5,9 @@ var app = express();
 var bodyParser = require('body-parser');
 
 
-var db_string = process.env.MONGOLAB_URI ||
- 'mongodb://root:root@ds133358.mlab.com:33358/imagelist'; // Heroku
-//var db_string = 'mongodb://127.0.0.1/imagelist'; // Local
+//var db_string = process.env.MONGOLAB_URI ||
+ //'mongodb://root:root@ds133358.mlab.com:33358/imagelist'; // Heroku
+var db_string = 'mongodb://127.0.0.1/imagelist'; // Local
 
 var mongoose = require('mongoose').connect(db_string);
 
@@ -19,7 +19,7 @@ db.on('error', console.error.bind(console, 'Erro ao conectar ao BD'));
 
 db.once('open', function () {
     var imageSchema = mongoose.Schema({
-        title: String
+        image: String
     });
 
     Photo = mongoose.model('Photo', imageSchema);
@@ -39,8 +39,24 @@ app.get('/', function (require, response) {
     response.send('Sevidor ON!');
 });
 
-app.get('/images', function (req, res) {
+app.get('/imagelist', function (req, res) {
     Photo.find({}, function(error, itens){
+        if(error){
+            res.json('Não foi possivel recuperar a lista');
+        } else {
+            res.json(itens);
+        }
+    });
+});
+
+app.get('/', function (require, response) {
+    response.send('Sevidor ON!');
+});
+
+app.get('/image', function (req, res) {
+    var id = req.param('_id');
+
+    Photo.find({'_id': id}, function(error, itens){
         if(error){
             res.json('Não foi possivel recuperar a lista');
         } else {
@@ -58,9 +74,24 @@ app.post('/image', function(req, res){
         'created_at': new Date()
     }).save(function(error, item){
         if(error){
-            res.json('Não foi possivel salvar o item');
+            res.json({response: 'failure',message: 'Não foi possivel salvar o item'});
         } else {
-            res.json(item);
+            res.json({response: 'success',_id: item.id});
+        }
+    });
+});
+
+app.delete('/image', function (req, res){
+    var id = req.param('id');
+    Photo.findById(id, function(error, photo){
+        if(error){
+            res.json("Não foi possivel retornar a imagem");
+        } else {
+            photo.remove(function(error){
+                if (!error) {
+                    res.json({response: "Image excluida"});
+                }
+            });
         }
     });
 });
