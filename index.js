@@ -81,16 +81,9 @@ app.post('/image', function(req, res){
 });
 
 app.delete('/image', function (req, res){
-    var id = req.param('id');
-    Photo.findById(id, function(error, photo){
-        if(error){
-            res.json("Não foi possivel retornar a imagem");
-        } else {
-            photo.remove(function(error){
-                if (!error) {
-                    res.json({response: "Image excluida"});
-                }
-            });
+    Photo.remove({}, function(error, photo){
+        if (!error) {
+            res.json({response: "Image excluida"});
         }
     });
 });
